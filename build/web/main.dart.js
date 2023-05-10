@@ -32963,7 +32963,7 @@ r.jc()}s.d=A.bY(s.nG(),s.gnS())},
 $S:0}
 A.a1M.prototype={
 $0(){var s,r=this.a,q=r.z
-q.ay=q.as=0
+q.ax=q.ay=q.as=0
 s=A.a9j()
 q.a=s
 q.w=new A.lh()
