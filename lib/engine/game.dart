@@ -55,6 +55,7 @@ class Game {
   void restart() {
     points = 0;
     n_placed = 0;
+    rows_cleared = 0;
     grid = Grid();
     held_piece = Tetramino();
     grid.clearAboveRows(rows-1);
