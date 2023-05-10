@@ -1,6 +1,6 @@
 {
     "name": "TETROMINO VERSUS",
-    "short_name": "TETROMINO VERSUS",
+    "short_name": "TETROMINO_VERSUS",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
