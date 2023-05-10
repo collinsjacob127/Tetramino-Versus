@@ -1,11 +1,11 @@
 {
-    "name": "tetramino_versus",
-    "short_name": "tetramino_versus",
+    "name": "TETROMINO VERSUS",
+    "short_name": "TETROMINO VERSUS",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Play online now!",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

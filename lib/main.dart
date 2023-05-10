@@ -17,9 +17,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'TETRAMINO VERSUS',
+      title: 'TETROMINO VERSUS',
       theme: ThemeData.dark(),
-      home: const MyHomePage(title: 'TETRAMINO VERSUS'),
+      home: const MyHomePage(title: 'TETROMINO VERSUS'),
     );
   }
 }
@@ -37,6 +37,8 @@ class _MyHomePageState extends State<MyHomePage> {
   // Page elements
   Timer? timer; // Tick for updating gamestate
   final FocusNode _focusNode = FocusNode(); // Request keyboard focus
+  final _rowController = TextEditingController();
+  final _colController = TextEditingController();
   // Game DISPLAY elements
   double _width = 25.0, _height = 25.0;
   int rows = 20, cols = 10;
@@ -45,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Game game = Game(); // Tetris game class
   bool playing = false, started = false;
   int gameSpeed = 600;
-  int points = 0; int stage = 1; int high_score = 0;
+  int points = 0; int stage = 0; int high_score = 0;
   // Timer variables
   bool active = false;
 
@@ -194,6 +196,17 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  bool isNumeric(String s) {
+    if (s == null) { return false; }
+    return double.tryParse(s) != null;
+  }
+
+  void _setGameDims() {
+    if (!isNumeric(_rowController.text) && !isNumeric(_colController.text)) { return; }
+    int new_rows = int.parse(_rowController.text);
+    int new_cols = int.parse(_colController.text);
+  }
+
   @override
   void initState() { // Game startup
     super.initState();
@@ -205,262 +218,302 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container( // Sets background color and alignment
-      color: Colors.grey[900],
-      alignment: Alignment.center,
-      child: SingleChildScrollView( // Fixes page cutoff
-        scrollDirection: Axis.horizontal,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[ // Replace with Container ()
-              Container( // ******** TITLE AND SCORE DISPLAY **********
-                margin: const EdgeInsets.only(bottom: 20.0),
-                alignment: Alignment.center,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Text(
-                    'TETRAMINO VERSUS',
-                    style: Theme.of(context)
-                      .textTheme
-                      .headlineMedium!
-                      .copyWith(fontSize: 45, color: Colors.red[500]),
-                    ),
-                    Text(
-                    'HIGHSCORE: ${high_score}',
-                    style: Theme.of(context)
-                      .textTheme
-                      .headlineMedium!
-                      .copyWith(fontSize: 25, color: Colors.grey[400]),
-                    ),
-                    Text(
-                      'SCORE: ${points}',
-                      style: Theme.of(context)
-                        .textTheme
-                        .headlineMedium!
-                        .copyWith(fontSize: 25, color: Colors.grey[400]),
-                    ),
-                    Text(
-                      'LEVEL ${stage}',
-                      style: Theme.of(context)
-                        .textTheme
-                        .headlineMedium!
-                        .copyWith(fontSize: 25, color: Colors.grey[400]),
-                    ),
-                  ],
-                ),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return MaterialApp(
+      home: Scaffold(
+        
+        body: Container( // Sets background color and alignment
+          color: Colors.grey[900],
+          alignment: Alignment.center,
+          child: SingleChildScrollView( // Fixes page cutoff
+            scrollDirection: Axis.horizontal,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Align( // ******** NEXT BLOCK PREVIEW **********
-                    alignment: Alignment(-1, 1),
+                children: <Widget>[ // Replace with Container ()
+                  Container( // ******** TITLE AND SCORE DISPLAY **********
+                    margin: const EdgeInsets.only(bottom: 20.0),
+                    alignment: Alignment.center,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Text(
-                          'HELD',
+                        'TETROMINO VERSUS',
+                        style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium!
+                          .copyWith(fontSize: 45, color: Colors.red[500]),
+                        ),
+                        Text(
+                        'HIGHSCORE: ${high_score}',
+                        style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium!
+                          .copyWith(fontSize: 25, color: Colors.grey[400]),
+                        ),
+                        Text(
+                          'SCORE: ${points}',
                           style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
-                            .copyWith(fontSize: 25, color: Colors.grey[300]),
+                            .copyWith(fontSize: 25, color: Colors.grey[400]),
                         ),
-                        Container(
-                          margin: const EdgeInsets.only(right: 10.0),
-                          height:  106,
-                          width:  106,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.white)
-                          ),
-                          child: GridView.count(
-                            crossAxisCount: 4,
-                            children: List.generate(16, (blockIndex) {
-                              return Center(
-                                child: Container(
-                                  width: _width,
-                                  height: _height,
-                                  color: colorFromBlock(blockIndex, game.held_piece),
-                                ),
-                              );
-                            }),
-                          ),
+                        Text(
+                          'LEVEL ${stage}',
+                          style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium!
+                            .copyWith(fontSize: 25, color: Colors.grey[400]),
                         ),
-                      ]
+                      ],
                     ),
                   ),
-                  Container(
-                    width: (((_width+1) * cols) + 2),
-                    height: (((_height+1) * rows) + 2),
-                    // margin: const EdgeInsets.only(right: 106.0),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white)
-                    ),
-                    child: AnimatedBuilder(
-                      animation: _focusNode,
-                      builder: (BuildContext context, Widget? child) {
-                        if (!_focusNode.hasFocus) {
-                          pause();
-                          return GestureDetector(
-                            onTap: () {
-                              FocusScope.of(context).requestFocus(_focusNode);
-                              unpause();
-                            },
-                            child: Container(
-                                alignment: Alignment.center,
-                                child: Text('START (CLICK HERE)',
-                                  style: Theme.of(context)
-                                    .textTheme
-                                    .headlineMedium!
-                                    .copyWith(fontSize: 25, backgroundColor: Colors.grey[800], color: Colors.white),
-                                )
-                              ),
-                          );
-                        }
-                        return Focus(
-                          focusNode: _focusNode,
-                          onKey: _handleKeyEvent,
-                          child: GridView.count(
-                            crossAxisCount: cols,
-                            children: List.generate(rows*cols, (index) {
-                              return Center(
-                                child: Container(
-                                  width: _width,
-                                  height: _height,
-                                  color: colorFromIndex(index),
-                                ),
-                              );
-                            }),
-                          ),
-                        ); 
-                      },
-                    )
-                  ),
-                  Column(
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text(
-                        'NEXT',
-                        style: Theme.of(context)
-                          .textTheme
-                          .headlineMedium!
-                          .copyWith(fontSize: 25, color: Colors.grey[300]),
+                      Align( // ******** NEXT BLOCK PREVIEW **********
+                        alignment: Alignment(-1, 1),
+                        child: Column(
+                          children: <Widget>[
+                            Text(
+                              'HELD',
+                              style: Theme.of(context)
+                                .textTheme
+                                .headlineMedium!
+                                .copyWith(fontSize: 25, color: Colors.grey[300]),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(right: 10.0),
+                              height:  106,
+                              width:  106,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.white)
+                              ),
+                              child: GridView.count(
+                                crossAxisCount: 4,
+                                children: List.generate(16, (blockIndex) {
+                                  return Center(
+                                    child: Container(
+                                      width: _width,
+                                      height: _height,
+                                      color: colorFromBlock(blockIndex, game.held_piece),
+                                    ),
+                                  );
+                                }),
+                              ),
+                            ),
+                          ]
+                        ),
                       ),
                       Container(
-                        margin: const EdgeInsets.only(left: 10.0),
-                        height:  106,
-                        width:  106,
+                        width: (((_width+1) * cols) + 2),
+                        height: (((_height+1) * rows) + 2),
+                        // margin: const EdgeInsets.only(right: 106.0),
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.white)
                         ),
-                        child: GridView.count(
-                          crossAxisCount: 4,
-                          children: List.generate(16, (blockIndex) {
-                            return Center(
-                              child: Container(
-                                width: _width,
-                                height: _height,
-                                color: colorFromBlock(blockIndex, game.next_piece),
+                        child: AnimatedBuilder(
+                          animation: _focusNode,
+                          builder: (BuildContext context, Widget? child) {
+                            if (!_focusNode.hasFocus) {
+                              pause();
+                              return GestureDetector(
+                                onTap: () {
+                                  FocusScope.of(context).requestFocus(_focusNode);
+                                  unpause();
+                                },
+                                child: Container(
+                                    alignment: Alignment.center,
+                                    child: Text('START (CLICK HERE)',
+                                      style: Theme.of(context)
+                                        .textTheme
+                                        .headlineMedium!
+                                        .copyWith(fontSize: 25, backgroundColor: Colors.grey[800], color: Colors.white),
+                                    )
+                                  ),
+                              );
+                            }
+                            return Focus(
+                              focusNode: _focusNode,
+                              onKey: _handleKeyEvent,
+                              child: GridView.count(
+                                crossAxisCount: cols,
+                                children: List.generate(rows*cols, (index) {
+                                  return Center(
+                                    child: Container(
+                                      width: _width,
+                                      height: _height,
+                                      color: colorFromIndex(index),
+                                    ),
+                                  );
+                                }),
                               ),
-                            );
-                          }),
-                        ),
+                            ); 
+                          },
+                        )
                       ),
-                    ]
+                      Column(
+                        children: <Widget>[
+                          Text(
+                            'NEXT',
+                            style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium!
+                              .copyWith(fontSize: 25, color: Colors.grey[300]),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(left: 10.0),
+                            height:  106,
+                            width:  106,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.white)
+                            ),
+                            child: GridView.count(
+                              crossAxisCount: 4,
+                              children: List.generate(16, (blockIndex) {
+                                return Center(
+                                  child: Container(
+                                    width: _width,
+                                    height: _height,
+                                    color: colorFromBlock(blockIndex, game.next_piece),
+                                  ),
+                                );
+                              }),
+                            ),
+                          ),
+                        ]
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              // Keep the tetris arena constant dimensions
-              // Expanded(
-              //   // fit: FlexFit.loose,
-              //   child: 
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Row( 
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        OutlinedButton( onPressed: () { game.moveLeft(); updateScores(); }, child: const Text("LEFT")),
-                        OutlinedButton( onPressed: () { game.moveRight();  updateScores(); }, child: const Text("RIGHT")),
-                        OutlinedButton( onPressed: () { game.moveDown();  updateScores(); }, child: const Text("DOWN")),
-                        OutlinedButton( onPressed: () { game.drop();  updateScores(); }, child: const Text("DROP")),
-                        OutlinedButton( onPressed: () { game.rotateCcw(); updateScores(); }, child: const Text("Rot L")),
-                        OutlinedButton( onPressed: () { game.rotateCw(); updateScores(); }, child: const Text("Rot R")),
-                        OutlinedButton( onPressed: () { restart(); updateScores(); }, child: const Text("RESTART")),
-                      ], // Button widget
-                    ), // Row
-                  ],
-                // ), // Col
-              ), // Buttons 
-              Container(
-                margin: const EdgeInsets.only(top: 10.0),
-                alignment: Alignment.center,
-                child: Text(
-                  'Keyboard Controls:',
-                  style: Theme.of(context)
-                    .textTheme
-                    .headlineMedium!
-                    .copyWith(fontSize: 15, color: Colors.grey[400]),
-                )
-              ),
-              Container(
-                margin: const EdgeInsets.only(bottom: 10.0),
-                padding: const EdgeInsets.all(3.0),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white)
-                ),
-                // alignment: Alignment.center,
-                child: Row(
-                  // crossAxisAlignment: CrossAxisAlignment.center,
-                  // mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget> [
-                    Container(
-                      margin: const EdgeInsets.only(right: 10.0),
-                      child: Text( 'A:\nS:\nD:\nR:\nTab:', 
-                        textAlign: TextAlign.right,
-                        style: Theme.of(context) .textTheme .headlineMedium!
-                          .copyWith(fontSize: 15, color: Colors.grey[400]),
-                      ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Row( 
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          OutlinedButton( onPressed: () { game.moveLeft(); updateScores(); }, child: const Text("LEFT")),
+                          OutlinedButton( onPressed: () { game.moveRight();  updateScores(); }, child: const Text("RIGHT")),
+                          OutlinedButton( onPressed: () { game.moveDown();  updateScores(); }, child: const Text("DOWN")),
+                          OutlinedButton( onPressed: () { game.drop();  updateScores(); }, child: const Text("DROP")),
+                          OutlinedButton( onPressed: () { game.rotateCcw(); updateScores(); }, child: const Text("Rot L")),
+                          OutlinedButton( onPressed: () { game.rotateCw(); updateScores(); }, child: const Text("Rot R")),
+                          OutlinedButton( onPressed: () { restart(); updateScores(); }, child: const Text("RESTART")),
+                        ], // Button widget
+                      ), // Row
+                    ],
+                  ), // Buttons 
+                  Container(
+                    margin: const EdgeInsets.only(top: 10.0),
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Keyboard Controls:',
+                      style: Theme.of(context)
+                        .textTheme
+                        .headlineMedium!
+                        .copyWith(fontSize: 15, color: Colors.grey[400]),
+                    )
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 10.0),
+                    padding: const EdgeInsets.all(3.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white)
                     ),
-                    Container(
-                      margin: const EdgeInsets.only(right: 10.0),
-                      child: Text( 'Move Left \nMove Down \nMove Right \nHold Piece \nPause', 
-                        style: Theme.of(context) .textTheme .headlineMedium!
-                          .copyWith(fontSize: 15, color: Colors.grey[400]),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only( left: 10.0),
-                      child: Text(
-                        'Q:\nW/E:\nSpace:\nDel:',
-                        textAlign: TextAlign.right,
-                        style: Theme.of(context)
-                          .textTheme
-                          .headlineMedium!
-                          .copyWith(fontSize: 15, color: Colors.grey[400]),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only( left: 10.0),
-                      child: Text(
-                        'Rotate Left\nRotate Right\nDrop piece\nRestart',
-                        style: Theme.of(context)
-                          .textTheme
-                          .headlineMedium!
-                          .copyWith(fontSize: 15, color: Colors.grey[400]),
-                      ),
-                    ),
-                  ],
-                )
-              ),
-            ], // Widget
+                    // alignment: Alignment.center,
+                    child: Row(
+                      // crossAxisAlignment: CrossAxisAlignment.center,
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget> [
+                        Container(
+                          margin: const EdgeInsets.only(right: 10.0),
+                          child: Text( 'A:\nS:\nD:\nR:\nTab:', 
+                            textAlign: TextAlign.right,
+                            style: Theme.of(context) .textTheme .headlineMedium!
+                              .copyWith(fontSize: 15, color: Colors.grey[400]),
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(right: 10.0),
+                          child: Text( 'Move Left \nMove Down \nMove Right \nHold Piece \nPause', 
+                            style: Theme.of(context) .textTheme .headlineMedium!
+                              .copyWith(fontSize: 15, color: Colors.grey[400]),
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only( left: 10.0),
+                          child: Text(
+                            'Q:\nW/E:\nSpace:\nDel:',
+                            textAlign: TextAlign.right,
+                            style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium!
+                              .copyWith(fontSize: 15, color: Colors.grey[400]),
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only( left: 10.0),
+                          child: Text(
+                            'Rotate Left\nRotate Right\nDrop piece\nRestart',
+                            style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium!
+                              .copyWith(fontSize: 15, color: Colors.grey[400]),
+                          ),
+                        ),
+                      ],
+                    )
+                  ),
+                  // Container(
+                  //   margin: const EdgeInsets.only(bottom: 10.0),
+                  //   padding: const EdgeInsets.all(3.0),
+                  //   decoration: BoxDecoration(
+                  //     border: Border.all(color: Colors.white)
+                  //   ),
+                  //   // alignment: Alignment.center,
+                  //   child: Row(
+                  //     children: <Widget>[
+                  //         TextField(
+                  //           controller: _rowController, 
+                  //           decoration: const InputDecoration(
+                  //             border: OutlineInputBorder(),
+                  //             labelText: 'Enter game height (Opt)',
+                  //             hintText: 'Game height input box',
+                  //           ),
+                  //       ) ,
+                  //         TextField(
+                  //           controller: _colController, 
+                  //           decoration: const InputDecoration(
+                  //             border: OutlineInputBorder(),
+                  //             labelText: 'Enter game width (Opt)',
+                  //             hintText: 'Game width input box',
+                  //           ),
+                  //       ),
+                  //       OutlinedButton(
+                  //         style: OutlinedButton.styleFrom(
+                  //           backgroundColor: Colors.red,
+                  //           fixedSize: const Size.fromHeight(100),
+                  //           surfaceTintColor: Colors.green,
+                  //           padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
+                  //           shape: const StadiumBorder(),
+                  //           side: const BorderSide(width: 4, color: Colors.black),
+                  //         ),
+                  //         onPressed: _setGameDims,
+                  //         child: const Text("LEFT"),
+                  //       ),
+                  //     ]
+                  //   ),
+                  // ),
+                ], // Widget
+              )
+            )
           )
-        )
-      )
-    ); // Scroll veiw (?)
+        ), // Scroll veiw (?)
+      ),
+    );
   }
 }
 
