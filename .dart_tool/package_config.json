@@ -56,10 +56,22 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "cross_file",
+      "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/cross_file-0.3.3+4",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "crypto",
       "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/crypto-3.0.3",
       "packageUri": "lib/",
       "languageVersion": "2.19"
+    },
+    {
+      "name": "csslib",
+      "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/csslib-0.17.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "cupertino_icons",
@@ -122,6 +134,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "flutter_plugin_android_lifecycle",
+      "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.15",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
       "name": "flutter_test",
       "rootUri": "file:///home/zato/flutter/packages/flutter_test",
       "packageUri": "lib/",
@@ -134,6 +152,78 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "geocode",
+      "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/geocode-1.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "geocoding",
+      "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/geocoding-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "geocoding_android",
+      "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/geocoding_android-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "geocoding_ios",
+      "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/geocoding_ios-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "geocoding_platform_interface",
+      "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/geocoding_platform_interface-2.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "geolocator",
+      "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/geolocator-9.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "geolocator_android",
+      "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/geolocator_android-4.1.8",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "geolocator_apple",
+      "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/geolocator_apple-2.2.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "geolocator_platform_interface",
+      "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/geolocator_platform_interface-4.0.7",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "geolocator_web",
+      "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/geolocator_web-2.1.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "geolocator_windows",
+      "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/geolocator_windows-0.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "html",
+      "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/html-0.15.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "http",
       "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/http-0.13.6",
       "packageUri": "lib/",
@@ -142,6 +232,42 @@
     {
       "name": "http_parser",
       "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/http_parser-4.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "image_picker",
+      "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/image_picker-0.8.7+5",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "image_picker_android",
+      "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/image_picker_android-0.8.6+16",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "image_picker_for_web",
+      "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/image_picker_for_web-2.1.12",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "image_picker_ios",
+      "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/image_picker_ios-0.8.7+4",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "image_picker_platform_interface",
+      "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/image_picker_platform_interface-2.6.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "image_picker_web",
+      "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/image_picker_web-3.0.0+1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -172,6 +298,18 @@
     {
       "name": "meta",
       "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/meta-1.8.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "mime",
+      "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/mime-1.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "mime_type",
+      "rootUri": "file:///home/zato/.pub-cache/hosted/pub.dev/mime_type-1.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -254,7 +392,7 @@
       "languageVersion": "2.19"
     }
   ],
-  "generated": "2023-05-20T01:15:35.380023Z",
+  "generated": "2023-05-20T10:40:19.254740Z",
   "generator": "pub",
   "generatorVersion": "2.19.6"
 }

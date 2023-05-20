@@ -12,6 +12,7 @@ import 'engine/tetraminos.dart';
 import 'engine/grid.dart';
 import 'engine/game.dart';
 import 'storage.dart';
+import 'add_photos.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -106,7 +107,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // Timer functions
   void _handleEvent() {setState(() {
-    // TODO: Handle timer event, e.g. update clock and speed 
     playing = game.playing;
     if (playing) { _incrementTime(); }
     timer = Timer(_getDuration(), _handleEvent); 
@@ -176,7 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Color? colorFromIndex(i) {
     switch (game.grid.getElement(i % cols, (i / cols).floor())) {
-      case 0: {return Colors.grey[600]; break;}
+      case 0: {return Colors.black; break;}
       case 1: {return Colors.orange[900]; break;}
       case 2: {return Colors.blue[900]; break;}
       case 3: {return Colors.lightGreenAccent[700]; break;}
@@ -189,9 +189,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Color? colorFromBlock(int i, Tetramino piece) {
-    if (!started) {return Colors.grey[600]; }
+    if (!started) {return Colors.black; }
     switch (piece.getElement(i % 4, (i / 4).floor())) {
-      case 0: {return Colors.grey[600]; break;}
+      case 0: {return Colors.black; break;}
       case 1: {return Colors.orange[900]; break;}
       case 2: {return Colors.blue[900]; break;}
       case 3: {return Colors.lightGreenAccent[700]; break;}
@@ -218,15 +218,8 @@ class _MyHomePageState extends State<MyHomePage> {
   final _myController = TextEditingController(); 
   final _storage = UserStorage();
   String? _username;
-  late String username = "";
-  // Button sets the username
-  // Future<void> _setUserinfo() async {
-  //   setState((){
-  //     _storage.writeUserInfo(_myController.text, high_score, level, 'chico');
-  //     while(_storage.isLoading) {}
-  //     _user = _storage.readUserInfo();
-  //   });
-  // }
+  late String username = "Unnamed user";
+  String downloadURL = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fuxwing.com%2Fsmile-icon&psig=AOvVaw3ZpOFbha06n0uqXMX8ajl8&ust=1684659501482000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCOiUs-vDg_8CFQAAAAAdAAAAABAE";
 
   void _printLatestValue(){ 
     if (kDebugMode) { 
@@ -234,29 +227,42 @@ class _MyHomePageState extends State<MyHomePage> {
     } 
   } 
 
-  bool _see_board = false; // Toggles leaderboard visibility
-  void _toggleLeaderboard() {setState(() {
-    _see_board = !_see_board; 
-    print("Board toggled");
-  });}
-
-  Widget _userWidget(AsyncSnapshot<QuerySnapshot>snapshot, int index){
+  Widget photoWidget(AsyncSnapshot<QuerySnapshot>snapshot, int index){
+    // try{
+    //   return Column(
+    //     children: [
+    //       // ListTile(
+    //       //   leading: const Icon(Icons.person),
+    //       //   title: Text(snapshot.data!.docs[index]['title']),
+    //       // ),
+    //       Image.network(snapshot.data!.docs[index]['downloadURL']),
+    //     ],
+    //     );
+    // } catch(e){
+      // return Text('Error: $e');
+      return Text('');
+    // }
+  }
+              
+  Widget _userWidget(AsyncSnapshot<QuerySnapshot>snapshot, int index, int length){
+    int unreversed_index = (length-1)-index;
     try{
       return Container(
         decoration: BoxDecoration(
           color: Colors.grey[800],
         ),
         margin: const EdgeInsets.all(5.0),
+        alignment:  Alignment.center,
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Container(
               margin: const EdgeInsets.all(5.0),
-              width: 20,
+              width: 60,
               alignment: Alignment.center,
               child: Text(
-                (index+1).toString(),
+                (unreversed_index+1).toString(),
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[300],
@@ -265,7 +271,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Container(
               margin: const EdgeInsets.all(5.0),
-              width: 60,
+              width: 100,
               alignment: Alignment.center,
               child: Text(
                 snapshot.data!.docs[index]['username'].toString(),
@@ -289,7 +295,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Container(
               margin: const EdgeInsets.all(5.0),
-              width: 20,
+              width: 50,
               alignment: Alignment.center,
               child: Text(
                 snapshot.data!.docs[index]['level'].toString(),
@@ -299,23 +305,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 )
               )
             ),
-            Container(
-              margin: const EdgeInsets.all(5.0),
-              width: 100,
-              alignment: Alignment.center,
-              child: Text(
-                snapshot.data!.docs[index]['city'].toString(),
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[300],
-                )
-              )
-            ),
+            // Container(
+            //   margin: const EdgeInsets.all(5.0),
+            //   width: 10,
+            //   // height:100,
+            //   alignment: Alignment.center,
+            //   child: photoWidget(snapshot, index),
+            // )
           ],
         ),
       );
     } catch(e){
-      return Text('Error: $e');
+      // return Text('Error: $e');
+      return Text('');
     }
   }
 
@@ -329,27 +331,204 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: <Widget>[
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Container(
                   margin: const EdgeInsets.all(5.0),
+                  width: 60,
+                  alignment: Alignment.center,
                   child: Text(
                     // snapshot.data!.docs[index].id,
-                    "    Name   |   Score   |   Level   |    City    ",
+                    "Rank",
+                    // "    Name   |   Score   |   Level   |    Pfp    ",
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.white,
                     ),
                   ),
                 ),
+                Container(
+                  margin: const EdgeInsets.all(5.0),
+                  width: 100,
+                  alignment: Alignment.center,
+                  child: Text(
+                    // snapshot.data!.docs[index].id,
+                    "Name",
+                    // "    Name   |   Score   |   Level   |    Pfp    ",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(5.0),
+                  width: 100,
+                  alignment: Alignment.center,
+                  child: Text(
+                    // snapshot.data!.docs[index].id,
+                    "Score",
+                    // "    Name   |   Score   |   Level   |    Pfp    ",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(5.0),
+                  width: 70,
+                  alignment: Alignment.center,
+                  child: Text(
+                    // snapshot.data!.docs[index].id,
+                    "Level",
+                    // "    Name   |   Score   |   Level   |    Pfp    ",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                // Container(
+                //   margin: const EdgeInsets.all(5.0),
+                //   width: 10,
+                //   child: Text( "",),
+                // ),
               ],
             ),
-            _userWidget(snapshot, reversed_index),
+            _userWidget(snapshot, reversed_index, length),
           ],
         ),
       );
-    } else { return _userWidget(snapshot, reversed_index); }
+    } else { return _userWidget(snapshot, reversed_index, length); }
+  }
+
+  // Future<Position> _determinePosition() async {
+  //   bool serviceEnabled;
+  //   LocationPermission permission;
+
+  //   // Test if location services are enabled.
+  //   serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  //   if (!serviceEnabled) {
+  //     // Location services are not enabled don't continue
+  //     // accessing the position and request users of the 
+  //     // App to enable the location services.
+  //     return Future.error('Location services are disabled.');
+  //   }
+
+  //   permission = await Geolocator.checkPermission();
+  //   if (permission == LocationPermission.denied) {
+  //     permission = await Geolocator.requestPermission();
+  //     if (permission == LocationPermission.denied) {
+  //       // Permissions are denied, next time you could try
+  //       // requesting permissions again (this is also where
+  //       // Android's shouldShowRequestPermissionRationale 
+  //       // returned true. According to Android guidelines
+  //       // your App should show an explanatory UI now.
+  //       return Future.error('Location permissions are denied');
+  //     }
+  //   }
+    
+  //   if (permission == LocationPermission.deniedForever) {
+  //     // Permissions are denied forever, handle appropriately. 
+  //     return Future.error(
+  //       'Location permissions are permanently denied, we cannot request permissions.');
+  //   } 
+
+  //   // When we reach here, permissions are granted and we can
+  //   // continue accessing the position of the device.
+  //   return await Geolocator.getCurrentPosition();
+  // }
+
+  // getAddressFromLatLng(context, double lat, double lng) async {
+  //   String _host = 'https://maps.google.com/maps/api/geocode/json';
+  //   final key = 'AIzaSyAXFZnO850nwmQi5P56agCTbD8Cg6YTP2U';
+  //   final url = '$_host?key=$mapApiKey&language=en&latlng=$lat,$lng';
+  //   if(lat != null && lng != null){
+  //     var response = await http.get(Uri.parse(url));
+  //     if(response.statusCode == 200) {
+  //       Map data = jsonDecode(response.body);
+  //       String _formattedAddress = data["results"][0]["formatted_address"];
+  //       print("response ==== $_formattedAddress");
+  //       return _formattedAddress;
+  //     } else return null;
+  //   } else return null;
+  // }
+
+  // Future<Address> _determinePosition() async {
+  //   bool serviceEnabled;
+  //   LocationPermission permission;
+  //   // Test if location services are enabled.
+  //   serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  //   if (!serviceEnabled) {
+  //     // Location services are not enabled don't continue
+  //     // accessing the position and request users of the
+  //     // App to enable the location services.
+  //     return Future.error('Location services are disabled.');
+  //   }
+
+  //   permission = await Geolocator.checkPermission();
+  //   if (permission == LocationPermission.denied) {
+  //     permission = await Geolocator.requestPermission();
+  //     if (permission == LocationPermission.denied) {
+  //       // Permissions are denied, next time you could try
+  //       // requesting permissions again (this is also where
+  //       // Android's shouldShowRequestPermissionRationale
+  //       // returned true. According to Android guidelines
+  //       // your App should show an explanatory UI now.
+  //       return Future.error('Location permissions are denied');
+  //     }
+  //   }
+
+  //   if (permission == LocationPermission.deniedForever) {
+  //     // Permissions are denied forever, handle appropriately.
+  //     return Future.error(
+  //         'Location permissions are permanently denied, we cannot request permissions.');
+  //   }
+
+  //   // When we reach here, permissions are granted and we can
+  //   // continue accessing the position of the device.
+  //   final currentLocation = await Geolocator.getCurrentPosition();
+  //   final currentAddress = await GeoCode().reverseGeocoding(
+  //       latitude: currentLocation.latitude,
+  //       longitude: currentLocation.longitude);
+  //   return currentAddress;
+  // }
+
+  // _fetchLocation() async {
+  //   Position position = await _geolocator.getCurrentPosition(
+  //       desiredAccuracy: LocationAccuracy.best);///Here you have choose level of distance
+  //   latitude = position.latitude.toString() ?? '';
+  //   longitude = position.longitude.toString() ?? '';
+  //   var placemarks = await _geolocator.placemarkFromCoordinates(position.latitude, position.longitude);
+  //   address ='${placemarks.first.name.isNotEmpty ? placemarks.first.name + ', ' : ''}${placemarks.first.thoroughfare.isNotEmpty ? placemarks.first.thoroughfare + ', ' : ''}${placemarks.first.subLocality.isNotEmpty ? placemarks.first.subLocality+ ', ' : ''}${placemarks.first.locality.isNotEmpty ? placemarks.first.locality+ ', ' : ''}${placemarks.first.subAdministrativeArea.isNotEmpty ? placemarks.first.subAdministrativeArea + ', ' : ''}${placemarks.first.postalCode.isNotEmpty ? placemarks.first.postalCode + ', ' : ''}${placemarks.first.administrativeArea.isNotEmpty ? placemarks.first.administrativeArea : ''}';
+  //   print("latitude"+latitude);
+  //   print("longitude"+longitude);
+  //   print("adreess"+address);
+  // }
+
+  Future<void> _saveUsername() async {
+    username = _myController.text;
+    try {
+      Address pos = await _determinePosition();
+      try {
+        String? _city = pos.city;
+        if (_city is String) {
+          city = _city;
+          print(city);
+        }
+      } on Exception catch (_) {
+        if (kDebugMode) {
+          print("City not pulled from pos properly");
+        }
+      }
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print("never reached: $e");
+      }
+    }
+    _upload();
   }
 
   List<Widget> leaderboard = <Widget>[];
@@ -365,7 +544,8 @@ class _MyHomePageState extends State<MyHomePage> {
               return const CircularProgressIndicator();
             default:
               if(snapshot.hasError){
-                return Text('Error: ${snapshot.error}');
+                // return Text('Error: ${snapshot.error}');
+                return Text('');
               } else {
                 return Expanded(
                   child: Scrollbar(
@@ -373,6 +553,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       physics: const AlwaysScrollableScrollPhysics(),
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder:(context, index) {
+                        _upload();
                         return userWidget(snapshot, index, snapshot.data!.docs.length);
                       },
                     ),
@@ -391,7 +572,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> _upload() async {
-    _storage.writeUserInfo(username, high_score, level, 'Chico');
+    User user = await _storage.readUserInfo(username);
+    if ((user.high_score < high_score) && (high_score > 0)) {
+      _storage.writeUserInfo(username, high_score, level, downloadURL);
+    }
   }
 
   @override
@@ -408,7 +592,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        
         body: Container( // Sets background color and alignment
           color: Colors.grey[900],
           alignment: Alignment.center,
@@ -705,36 +888,34 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   Column(
                     children: <Widget>[
-                      ElevatedButton(
-                        onPressed: _toggleLeaderboard,
-                        style: ElevatedButton.styleFrom(backgroundColor: Colors.grey[600]),
-                        child: const Text(
-                          "Toggle Leaderboard",
-                          style: TextStyle(fontSize: 14),
+                      Container(
+                        width:380,
+                        height:480,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white)
                         ),
-                      ),
-                      Visibility(
-                        child: Container(
-                          width:380,
-                          height:480,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.white)
-                          ),
-                          alignment: Alignment.topLeft,
-                          margin: const EdgeInsets.only(left:20),
-                          child: Column(
-                            children: getLeaderboard(),
-                          )
-                        ),
-                        maintainSize: true,
-                        maintainAnimation: true,
-                        maintainState: true,
-                        visible: _see_board,
+                        alignment: Alignment.topLeft,
+                        margin: const EdgeInsets.only(left:20),
+                        child: Column(
+                          children: getLeaderboard(),
+                        )
                       ),
                       Row(
                         children: <Widget>[
+                          ElevatedButton(
+                            onPressed:() {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:(context) => AddPhotos(title: 'Add a photo', username: username),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(backgroundColor: Colors.grey[600]),
+                            child: const Icon(Icons.photo_camera),
+                          ),
                           Container(
-                            margin: EdgeInsets.all(5.0),
+                            margin: EdgeInsets.all(30.0),
                             width:150,
                             height:40,
                             child: TextField(
@@ -745,8 +926,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                 border: OutlineInputBorder(),
                                 labelText: "Enter Username" ,
                                 labelStyle: TextStyle(color: Colors.grey[300]),
-                                hintText: "Username input box",
-                                hintStyle: TextStyle(color: Colors.grey[300]),
                               ),
                             ),
                           ),
