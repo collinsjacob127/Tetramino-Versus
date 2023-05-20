@@ -508,28 +508,28 @@ class _MyHomePageState extends State<MyHomePage> {
   //   print("adreess"+address);
   // }
 
-  Future<void> _saveUsername() async {
-    username = _myController.text;
-    try {
-      Address pos = await _determinePosition();
-      try {
-        String? _city = pos.city;
-        if (_city is String) {
-          city = _city;
-          print(city);
-        }
-      } on Exception catch (_) {
-        if (kDebugMode) {
-          print("City not pulled from pos properly");
-        }
-      }
-    } on Exception catch (e) {
-      if (kDebugMode) {
-        print("never reached: $e");
-      }
-    }
-    _upload();
-  }
+  // Future<void> _saveUsername() async {
+  //   username = _myController.text;
+  //   try {
+  //     Address pos = await _determinePosition();
+  //     try {
+  //       String? _city = pos.city;
+  //       if (_city is String) {
+  //         city = _city;
+  //         print(city);
+  //       }
+  //     } on Exception catch (_) {
+  //       if (kDebugMode) {
+  //         print("City not pulled from pos properly");
+  //       }
+  //     }
+  //   } on Exception catch (e) {
+  //     if (kDebugMode) {
+  //       print("never reached: $e");
+  //     }
+  //   }
+  //   _upload();
+  // }
 
   List<Widget> leaderboard = <Widget>[];
 
